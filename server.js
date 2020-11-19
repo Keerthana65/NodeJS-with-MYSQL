@@ -9,6 +9,9 @@ app.use(express.json());
 app.use(cors());
 
 require("./routes/childDetailsRoutes")(app);
+require("./routes/generalConditionsRoutes")(app);
+require("./routes/complaintsRoutes")(app);
+require("./routes/pastPresentingComplaintsRoutes")(app);
 
 db.sequelize.sync().then(() => {
   app.listen(PORT, () => {

@@ -3,6 +3,21 @@ const calBmi = (height, mass) => {
     let bmi = ((mass / (height * height)) * 10000).toFixed(2);
     return bmi
 }
+
+const currentAge = (dateOfBirth) => {
+    let today = new Date();
+    let birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    return age;
+}
+
+const calMonth = (dateOfBirth) => {
+    let today = new Date();
+    let birthDate = new Date(dateOfBirth);
+    let months = today.getMonth() - birthDate.getMonth();
+    return months;
+}
+
 function saveChildDetails(req, res) {
     const childDetailsObj = {
         id: req.body.id,
@@ -29,8 +44,8 @@ function saveChildDetails(req, res) {
         BHTNo: req.body.BHTNo,
         yearBHTNo: req.body.yearBHTNo,
         carerContactNo: req.body.carerContactNo,
-        age: req.body.age,
-        months: req.body.months
+        age: currentAge(req.body.dateOfBirth),
+        months: calMonth(req.body.dateOfBirth)
     };
     db.childDetails
         .create(childDetailsObj)

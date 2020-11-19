@@ -34,4 +34,24 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+// Child Id as a Foreign Key for Admit Clinic
+db.childDetails.hasMany(db.admitClinicDetails);
+db.admitClinicDetails.belongsTo(db.childDetails);
+
+// Child Id as a Foreign Key for General Conditions
+db.childDetails.hasMany(db.generalConditions);
+db.generalConditions.belongsTo(db.childDetails);
+
+// Admit Clinic Id as a Foreign Key for General Conditions
+db.admitClinicDetails.hasMany(db.generalConditions);
+db.generalConditions.belongsTo(db.admitClinicDetails);
+
+// Child Id as a Foreign Key for Past Presenting Complaints
+db.childDetails.hasMany(db.pastPresentingComplaints);
+db.pastPresentingComplaints.belongsTo(db.childDetails);
+
+// Admit Clinic Id as a Foreign Key for Past Presenting Complaints
+db.admitClinicDetails.hasMany(db.pastPresentingComplaints);
+db.pastPresentingComplaints.belongsTo(db.admitClinicDetails);
+
 module.exports = db;
