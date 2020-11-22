@@ -5,17 +5,26 @@ function saveComplaints(req, res) {
         complaintsName: req.body.complaintsName
     };
     db.complaints
-        .create(complaintsObj)
-        .then((result) => {
-            res.status(200).json({
-                message: "Complaints Created Successfully"
-            });
+        .findOne({
+            where: { complaintsName: req.body.complaintsName },
         })
-        .catch((error) => {
-            res.status(500).json({
-                message: "Something Wrong",
-                error: error,
-            });
+        .then((savedComplaints) => {
+            if (savedComplaints) {
+                return res.status(422).json({ error: "Complaint Already Exist" });
+            }
+            db.complaints
+                .create(complaintsObj)
+                .then((result) => {
+                    res.status(200).json({
+                        message: "Complaints Created Successfully"
+                    });
+                })
+                .catch((error) => {
+                    res.status(500).json({
+                        message: "Something Wrong",
+                        error: error,
+                    });
+                });
         });
 }
 

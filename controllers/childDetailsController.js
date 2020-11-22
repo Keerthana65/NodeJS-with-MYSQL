@@ -1,4 +1,6 @@
 const db = require("../models");
+const moment = require("moment");
+
 const calBmi = (height, mass) => {
     let bmi = ((mass / (height * height)) * 10000).toFixed(2);
     return bmi
