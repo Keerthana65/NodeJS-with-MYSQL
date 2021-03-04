@@ -8,7 +8,7 @@ module.exports = (app) => {
     router.get("/:id",complaints.getComplaintsById);
     router.put("/:id",complaints.updateComplaints);
     router.delete("/:id",complaints.deleteComplaintsId);
-    router.get("/download",complaints.download);
+    router.get("/csv/export",complaints.download);
     router.post("/upload", upload.single("file"), complaints.upload);
   
     app.use("/complaints", router);
