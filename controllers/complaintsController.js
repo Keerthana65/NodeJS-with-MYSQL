@@ -109,10 +109,10 @@ function download(req, res){
   
       const csvFields = ["Id", "Complaints Name"];
       const csvParser = new CsvParser({ csvFields });
-      const csvData = csvParser.parse(tutorials);
+      const csvData = csvParser.parse(comp);
   
       res.setHeader("Content-Type", "text/csv");
-      res.setHeader("Content-Disposition", "attachment; filename=tutorials.csv");
+      res.setHeader("Content-Disposition", "attachment; filename=comp.csv");
   
       res.status(200).end(csvData);
     });
