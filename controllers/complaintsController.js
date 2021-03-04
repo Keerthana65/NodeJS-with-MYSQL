@@ -1,5 +1,9 @@
 const db = require("../models");
 
+const fs = require("fs");
+const csv = require("fast-csv");
+const CsvParser = require("json2csv").Parser;
+
 function saveComplaints(req, res) {
     const complaintsObj = {
         complaintsName: req.body.complaintsName
@@ -94,10 +98,72 @@ function deleteComplaintsId(req, res) {
         });
 }
 
+function download(req, res){
+    db.complaints.findAll().then((objs) => {
+      let comp = [];
+  
+      objs.forEach((obj) => {
+        const { id, complaintsName } = obj;
+        comp.push({ id,complaintsName });
+      });
+  
+      const csvFields = ["Id", "Complaints Name"];
+      const csvParser = new CsvParser({ csvFields });
+      const csvData = csvParser.parse(tutorials);
+  
+      res.setHeader("Content-Type", "text/csv");
+      res.setHeader("Content-Disposition", "attachment; filename=tutorials.csv");
+  
+      res.status(200).end(csvData);
+    });
+  };
+
+  function upload(req, res){
+    try {
+      if (req.file == undefined) {
+        return res.status(400).send("Please upload a CSV file!");
+      }
+  
+      let comp = [];
+      let path = "D:/Keerthi/Import/" + req.file.filename;
+  
+      fs.createReadStream(path)
+        .pipe(csv.parse({ headers: true }))
+        .on("error", (error) => {
+          throw error.message;
+        })
+        .on("data", (row) => {
+            comp.push(row);
+        })
+        .on("end", () => {
+            db.complaints.bulkCreate(comp)
+            .then(() => {
+              res.status(200).send({
+                message:
+                  "Uploaded the file successfully: " + req.file.originalname,
+              });
+            })
+            .catch((error) => {
+              res.status(500).send({
+                message: "Fail to import data into database!",
+                error: error.message,
+              });
+            });
+        });
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({
+        message: "Could not upload the file: " + req.file.originalname,
+      });
+    }
+  };
+
 module.exports = {
     saveComplaints,
     getAllComplaints,
     getComplaintsById,
     updateComplaints,
-    deleteComplaintsId
+    deleteComplaintsId,
+    download,
+    upload,
 };
